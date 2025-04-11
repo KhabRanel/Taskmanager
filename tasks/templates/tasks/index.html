@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>title</title>
-</head>
-<body>
-<h1>Hello world</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Список задач{% endblock %}
+
+{% block content %}
+<h1>Список задач</h1>
+
+<ul class="list-group">
+    {% for task in tasks %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ task.title }}
+            <span class="badge bg-{{ task.status|yesno:'success,warning,secondary' }}">{{ task.get_status_display }}</span>
+        </li>
+    {% empty %}
+        <li class="list-group-item">Задач пока нет.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
