@@ -11,7 +11,10 @@
             <div>
                 <strong>{{ task.title }}</strong><br>
                 <small class="text-muted">{{ task.created_at|date:"d.m.Y H:i" }}</small>
+                <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+
             </div>
+
             <span class="badge bg-secondary">{{ task.get_status_display }}</span>
         </li>
     {% empty %}

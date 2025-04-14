@@ -8,18 +8,18 @@ class Task(models.Model):
     COMPLETED = 'completed'
 
     STATUS_CHOICES = [
-        (NEW, 'New'),
-        (IN_PROGRESS, 'In Progress'),
-        (COMPLETED, 'Completed'),
+        (NEW, 'Новая'),
+        (IN_PROGRESS, 'В работе'),
+        (COMPLETED, 'Выполнено'),
     ]
 
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    status = models.CharField(max_length=20,
+    title = models.CharField(max_length=200, verbose_name='Название')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    status = models.CharField(max_length=20, verbose_name='Статус',
         choices=STATUS_CHOICES,
-        default=NEW,)
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    due_date = models.DateTimeField(null=True, blank=True)
+        default=NEW)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата создания')
+    due_date = models.DateTimeField(null=True, blank=True, verbose_name='Дедлайн')
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='tasks')
 
     def __str__(self):
