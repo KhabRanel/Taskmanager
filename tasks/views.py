@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Task
@@ -35,6 +35,16 @@ class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'tasks/task_form.html'
+    success_url = reverse_lazy('task_list')
+
+    def test_func(self):
+        task = self.get_object()
+        return task.user == self.request.user
+
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    template_name = 'tasks/task_confirm_delete.html'
     success_url = reverse_lazy('task_list')
 
     def test_func(self):

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'tasks',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/tasks/'  # куда после логина
+LOGOUT_REDIRECT_URL = '/'  # куда после выхода
+
