@@ -10,7 +10,7 @@ class Task(models.Model):
     STATUS_CHOICES = [
         (NEW, 'Новая'),
         (IN_PROGRESS, 'В работе'),
-        (COMPLETED, 'Выполнено'),
+        (COMPLETED, 'Завершена'),
     ]
 
     title = models.CharField(max_length=200, verbose_name='Название')

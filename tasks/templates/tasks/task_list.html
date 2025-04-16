@@ -3,20 +3,36 @@
 {% block title %}Мои задачи{% endblock %}
 
 {% block content %}
-<h2>Мои задачи</h2>
-
+<div class="d-flex justify-content-between mb-3">
+    <h2>Мои задачи</h2>
+    <div>
+        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary btn-sm {% if not request.GET.status %}active{% endif %}">Все</a>
+        <a href="?status=new" class="btn btn-outline-secondary btn-sm {% if request.GET.status == 'new' %}active{% endif %}">Новые</a>
+        <a href="?status=in_progress" class="btn btn-outline-secondary btn-sm {% if request.GET.status == 'in_progress' %}active{% endif %}">В работе</a>
+        <a href="?status=completed" class="btn btn-outline-secondary btn-sm {% if request.GET.status == 'completed' %}active{% endif %}">Завершённые</a>
+    </div>
+</div>
 <ul class="list-group">
     {% for task in tasks %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
                 <strong>{{ task.title }}</strong><br>
                 <small class="text-muted">{{ task.created_at|date:"d.m.Y H:i" }}</small>
-                <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-primary">✏️</a>
-                <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">🗑️</a>
+                <div class="d-flex gap-2 mt-2">
+                    <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-primary">✏️ Ред.</a>
+                    <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">🗑️ Удалить</a>
+                    {% if task.status != 'completed' %}
+                        <form method="post" action="{% url 'task_complete' task.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">✅ Завершить</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-secondary">{{ task.get_status_display }}</span>
 
             </div>
-
-            <span class="badge bg-secondary">{{ task.get_status_display }}</span>
         </li>
     {% empty %}
         <li class="list-group-item">У вас пока нет задач.</li>
