@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -16,6 +17,7 @@ class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(user=self.request.user)
@@ -25,6 +27,11 @@ class TaskListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(status=status)
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):

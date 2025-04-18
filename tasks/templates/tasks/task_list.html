@@ -14,10 +14,13 @@
 </div>
 <ul class="list-group">
     {% for task in tasks %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <li class="list-group-item {% if task.due_date and task.due_date < now %}list-group-item-danger{% endif %} d-flex justify-content-between align-items-center">
             <div>
                 <strong>{{ task.title }}</strong><br>
-                <small class="text-muted">{{ task.created_at|date:"d.m.Y H:i" }}</small>
+                <small class="text-muted">
+                    {{ task.created_at|date:"d.m.Y H:i" }}
+                    {% if task.due_date %}| Дедлайн: {{ task.due_date|date:"d.m.Y H:i" }}{% endif %}
+                </small>
                 <div class="d-flex gap-2 mt-2">
                     <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-primary">✏️ Ред.</a>
                     <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">🗑️ Удалить</a>
@@ -38,4 +41,29 @@
         <li class="list-group-item">У вас пока нет задач.</li>
     {% endfor %}
 </ul>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Навигация по страницам">
+  <ul class="pagination justify-content-center mt-4">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}page={{ page_obj.previous_page_number }}">Назад</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Назад</span></li>
+    {% endif %}
+
+    <li class="page-item disabled"><span class="page-link">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span></li>
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}page={{ page_obj.next_page_number }}">Вперёд</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Вперёд</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
 {% endblock %}
